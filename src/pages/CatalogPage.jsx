@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { PackageSearch } from 'lucide-react'
 import { products } from '../data/products'
@@ -10,6 +10,16 @@ export default function CatalogPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [lastAdded, setLastAdded] = useState(null)
 
+  const timerRef = useRef(null)
+
+  const handleAddedToCart = (productName) => {
+    setLastAdded(productName)
+    clearTimeout(timerRef.current)   // si añades otro rápido, reinicia el conteo
+    timerRef.current = setTimeout(() => setLastAdded(null), 3000)
+  }
+
+// Limpieza al salir de la página para no actualizar estado desmontado
+useEffect(() => () => clearTimeout(timerRef.current), [])
   // Estado de filtros
   // El parámetro ?cat=Hoodies en la URL pre-selecciona la categoría
   const [filters, setFilters] = useState({
@@ -88,17 +98,7 @@ export default function CatalogPage() {
           />
 
           {lastAdded && (
-            <div style={{
-              padding: '12px 16px',
-              marginBottom: '16px',
-              background: 'var(--green)',
-              border: '3px solid var(--border-color)',
-              borderRadius: 'var(--radius-md)',
-              boxShadow: 'var(--shadow-sm)',
-              fontFamily: 'var(--font-display)',
-              fontWeight: 700,
-              fontSize: '0.9rem',
-            }}>
+            <div className="add-banner" role="status">
               ✅ Añadiste <strong>"{lastAdded}"</strong> al carrito
             </div>
           )}
@@ -111,10 +111,7 @@ export default function CatalogPage() {
                   <ProductCard
                     key={product.id}
                     product={product}
-                    onAddedToCart={(productName) => {
-                      setLastAdded(productName)           // padre actualiza su estado
-                      setTimeout(() => setLastAdded(null), 3000)  // se limpia solo
-                    }}
+                    onAddedToCart={handleAddedToCart}
                   />
                 ))}
               </div>

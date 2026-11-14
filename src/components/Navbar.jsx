@@ -108,8 +108,7 @@ export default function Navbar() {
             🛒 Carrito {itemCount > 0 && `(${itemCount})`}
           </Link>
 
-          <hr className="divider" style={{ margin: '8px 0' }} />
-
+          <hr className="divider divider-tight" />    
           {isAuthenticated ? (
             <>
               <div className="mobile-link" style={{ background: 'var(--primary)' }}>

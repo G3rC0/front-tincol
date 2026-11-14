@@ -40,8 +40,7 @@ export default function Footer() {
 
         <div className="footer-bottom">
           <span>© {new Date().getFullYear()} Tienda Colmena. Todos los derechos reservados.</span>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', color: '#555' }}>
-            Hecho con 🐝 en Bolivia
+<span className="footer-credit">            Hecho con 🐝 en Bolivia
           </span>
         </div>
       </div>

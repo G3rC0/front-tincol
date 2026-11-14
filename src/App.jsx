@@ -20,6 +20,7 @@ import CatalogPage       from './pages/CatalogPage'
 import ProductDetailPage from './pages/ProductDetailPage'
 import CartPage          from './pages/CartPage'
 import AuthPage          from './pages/AuthPage'
+import NotFoundPage from './pages/NotFoundPage'
 
 export default function App() {
   return (
@@ -37,25 +38,7 @@ export default function App() {
               <Route path="/producto/:id" element={<ProductDetailPage />} />
               <Route path="/carrito"      element={<CartPage />} />
               <Route path="/auth"         element={<AuthPage />} />
-
-              {/* Ruta 404 — cualquier URL no reconocida */}
-              <Route
-                path="*"
-                element={
-                  <div style={{ textAlign: 'center', padding: '100px 20px' }}>
-                    <div style={{ fontSize: '4rem', marginBottom: '16px' }}>🐝</div>
-                    <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '2rem', marginBottom: '8px' }}>
-                      404 — Página no encontrada
-                    </h1>
-                    <p style={{ color: 'var(--text-muted)', marginBottom: '24px' }}>
-                      La página que buscas no existe o fue movida.
-                    </p>
-                    <a href="/" className="btn btn-primary btn-lg">
-                      Volver al inicio
-                    </a>
-                  </div>
-                }
-              />
+              <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </main>
 

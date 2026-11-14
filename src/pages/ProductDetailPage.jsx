@@ -6,6 +6,8 @@ import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
 import ImageCarousel from '../components/ImageCarousel'
 import AuthModal from '../components/AuthModal'
+import Badge from '../components/ui/Badge'
+import Toast from '../components/ui/Toast'
 
 export default function ProductDetailPage() {
   const { id } = useParams()
@@ -37,10 +39,6 @@ export default function ProductDetailPage() {
       </div>
     )
   }
-
-  const badgeClass =
-    product.badgeColor === 'green' ? 'badge badge-green' :
-    product.badgeColor === 'coral' ? 'badge badge-coral' : 'badge badge-yellow'
 
   const handleAddToCart = () => {
     // Verificar auth primero
@@ -95,9 +93,9 @@ export default function ProductDetailPage() {
             <div className="product-detail-info">
               {/* Badge + categoría */}
               <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '12px' }}>
-                <span className="badge badge-blue">{product.category}</span>
+                <Badge color="blue">{product.category}</Badge>
                 {product.badge && (
-                  <span className={badgeClass}>{product.badge}</span>
+                  <Badge color={product.badgeColor}>{product.badge}</Badge>
                 )}
               </div>
 
@@ -166,7 +164,7 @@ export default function ProductDetailPage() {
 
       {/* Toast de éxito */}
       {showToast && (
-        <div className="toast">✅ ¡Añadido al carrito!</div>
+        <Toast>✅ ¡Añadido al carrito!</Toast>
       )}
 
       {/* Modal de auth */}
