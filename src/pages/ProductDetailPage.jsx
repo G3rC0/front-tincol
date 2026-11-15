@@ -86,7 +86,7 @@ export default function ProductDetailPage() {
             <span className="breadcrumb-sep">/</span>
             <Link to="/catalogo">Catálogo</Link>
             <span className="breadcrumb-sep">/</span>
-            <Link to={`catalogo?cat=${product.category}`}>{product.category}</Link>
+            <Link to={`/catalogo?cat=${product.category}`}>{product.category}</Link>
             <span className="breadcrumb-sep">/</span>
             <span>{product.name}</span>
           </nav>
