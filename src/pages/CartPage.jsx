@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
-import { Trash2, ShoppingBag, ArrowLeft, ArrowRight } from 'lucide-react'
+import { Trash2, ShoppingBag, ArrowLeft, ArrowRight, Truck } from 'lucide-react'
 import { useCart } from '../context/CartContext'
+import { formatPrice } from '../utils/formatPrice'
 
 // Costo de envío simulado — 0 si supera Bs. 150
 const SHIPPING_THRESHOLD = 150
@@ -17,17 +18,11 @@ export default function CartPage() {
     return (
       <div className="cart-page">
         <div className="container">
-          <h1 className="section-title" style={{ marginBottom: '32px' }}>
-            Mi carrito 🛒
-          </h1>
-          <div className="cart-empty" style={{ textAlign: 'center', padding: '80px 20px' }}>
-            <div style={{ fontSize: '5rem', marginBottom: '16px' }}>🛒</div>
-            <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.5rem', marginBottom: '8px' }}>
-              Tu carrito está vacío
-            </h2>
-            <p style={{ color: 'var(--text-muted)', marginBottom: '28px' }}>
-              ¡Agrega algo desde el catálogo y vuelve aquí!
-            </p>
+          <h1 className="section-title cart-heading">Mi carrito</h1>
+          <div className="cart-empty">
+            <div className="cart-empty-icon"><ShoppingBag size={64} strokeWidth={1.5} /></div>
+            <h2 className="cart-empty-title">Tu carrito está vacío</h2>
+            <p className="cart-empty-desc">¡Agrega algo desde el catálogo y vuelve aquí!</p>
             <Link to="/catalogo" className="btn btn-primary btn-lg">
               <ShoppingBag size={18} /> Explorar catálogo
             </Link>
@@ -42,17 +37,10 @@ export default function CartPage() {
     <div className="cart-page">
       <div className="container">
         {/* Header */}
-        <div className="section-header" style={{ marginBottom: '24px' }}>
+        <div className="section-header">
           <h1 className="section-title">
             Mi carrito
-            <span
-              style={{
-                fontFamily: 'var(--font-mono)', fontSize: '0.9rem',
-                background: 'var(--primary)', border: '2px solid var(--border-color)',
-                borderRadius: 'var(--radius-pill)', padding: '2px 10px',
-                marginLeft: '10px', fontWeight: 700,
-              }}
-            >
+            <span className="cart-count-pill">
               {itemCount} ítem{itemCount !== 1 ? 's' : ''}
             </span>
           </h1>
@@ -75,16 +63,11 @@ export default function CartPage() {
                   <p className="cart-item-meta">
                     Talla: <strong>{item.size}</strong>
                     {' · '}
-                    Bs. {item.price.toFixed(2)} c/u
+                    {formatPrice(item.price)} c/u
                   </p>
 
                   {/* Controles de cantidad */}
-                  <div
-                    style={{
-                      display: 'flex', alignItems: 'center',
-                      justifyContent: 'space-between', marginTop: 'auto', flexWrap: 'wrap', gap: '8px',
-                    }}
-                  >
+                  <div className="cart-item-controls">
                     <div className="qty-controls">
                       <button
                         className="qty-btn"
@@ -103,9 +86,9 @@ export default function CartPage() {
                       </button>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <div className="cart-item-actions">
                       <span className="cart-item-subtotal">
-                        Bs. {(item.price * item.quantity).toFixed(2)}
+                        {formatPrice(item.price * item.quantity)}
                       </span>
                       <button
                         className="cart-remove-btn"
@@ -122,11 +105,7 @@ export default function CartPage() {
             ))}
 
             {/* Link volver */}
-            <Link
-              to="/catalogo"
-              className="btn btn-white btn-sm"
-              style={{ display: 'inline-flex', marginTop: '8px' }}
-            >
+            <Link to="/catalogo" className="btn btn-white btn-sm cart-back-link">
               <ArrowLeft size={15} /> Seguir comprando
             </Link>
           </div>
@@ -137,52 +116,43 @@ export default function CartPage() {
 
             <div className="cart-summary-row">
               <span>Subtotal ({itemCount} ítem{itemCount !== 1 ? 's' : ''})</span>
-              <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700 }}>
-                Bs. {subtotal.toFixed(2)}
+              <span className="mono-bold">
+                {formatPrice(subtotal)}
               </span>
             </div>
 
             <div className="cart-summary-row">
               <span>Envío</span>
-              <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700 }}>
+              <span className="mono-bold">
                 {shipping === 0
-                  ? <span style={{ color: '#0a5c1b' }}>Gratis 🎉</span>
-                  : `Bs. ${SHIPPING_COST.toFixed(2)}`
+                  ? <span className="text-success">Gratis</span>
+                  : formatPrice(SHIPPING_COST)
                 }
               </span>
             </div>
 
             {/* Aviso envío gratis */}
             {shipping > 0 && (
-              <div
-                style={{
-                  padding: '10px 12px', marginBottom: '4px',
-                  background: '#FFFBEB',
-                  border: '2px solid var(--primary)',
-                  borderRadius: 'var(--radius-sm)',
-                  fontSize: '0.82rem', fontWeight: 600,
-                }}
-              >
-                🚚 Añade Bs. {(SHIPPING_THRESHOLD - subtotal).toFixed(2)} más para envío gratis
+              <div className="cart-shipping-note">
+                <Truck size={16} /> Añade {formatPrice(SHIPPING_THRESHOLD - subtotal)} más para envío gratis
               </div>
             )}
 
             <div className="cart-summary-row total">
               <span>Total</span>
-              <span style={{ fontFamily: 'var(--font-mono)' }}>Bs. {total.toFixed(2)}</span>
+              <span className="text-mono">{formatPrice(total)}</span>
             </div>
 
             {/* Checkout (placeholder — conectar al flujo de pago) */}
             <button
-              className="btn btn-primary btn-full btn-lg"
-              style={{ marginTop: '20px' }}
-              onClick={() => alert('🚀 Próximamente: integración de pago')}
+              className="btn btn-primary btn-full btn-lg cart-checkout-btn"
+              onClick={() => alert('Próximamente: integración de pago')}
             >
               Proceder al pago <ArrowRight size={18} />
             </button>
 
-            <p style={{ textAlign: 'center', fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '12px' }}>
-              🔒 Pago seguro · Devoluciones sin costo
+            <p className="cart-secure-note">
+              Pago seguro · Devoluciones sin costo
             </p>
           </div>
         </div>

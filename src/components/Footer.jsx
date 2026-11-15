@@ -9,8 +9,7 @@ export default function Footer() {
           <div>
             <div className="footer-brand-name">🐝 Tienda Colmena</div>
             <p className="footer-tagline">
-              Streetwear auténtico hecho para la calle. <br />
-              Viste diferente. Viste Colmena.
+              Ropa urbana de corte relajado.
             </p>
           </div>
 
@@ -40,8 +39,7 @@ export default function Footer() {
 
         <div className="footer-bottom">
           <span>© {new Date().getFullYear()} Tienda Colmena. Todos los derechos reservados.</span>
-<span className="footer-credit">            Hecho con 🐝 en Bolivia
-          </span>
+          <span className="footer-credit">Hecho en Bolivia</span>
         </div>
       </div>
     </footer>

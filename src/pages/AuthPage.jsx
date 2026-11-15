@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams, Link } from 'react-router-dom'
-import { LogIn, UserPlus, Eye, EyeOff } from 'lucide-react'
+import { LogIn, UserPlus, Eye, EyeOff, AlertTriangle, CheckCircle2 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
+import { validateEmail } from '../utils/validateEmail'
 
 export default function AuthPage() {
   const [searchParams] = useSearchParams()
@@ -22,8 +23,6 @@ export default function AuthPage() {
   const [error,   setError]   = useState('')
   const [success, setSuccess] = useState('')
   const [loading, setLoading] = useState(false)
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   useEffect(() => {
     if (isAuthenticated) navigate('/', { replace: true })
@@ -47,7 +46,7 @@ export default function AuthPage() {
     }
 
     // 2. NUEVO: Validación de formato de email en Login
-    if (!emailRegex.test(email.trim())) {
+    if (!validateEmail(email.trim())) {
       setError('Por favor, ingresa un formato de email válido (ej: tu@email.com)')
       setLoading(false); return
     }
@@ -78,7 +77,7 @@ export default function AuthPage() {
     }
 
     // 4. NUEVO: Validación de formato de email en Registro
-    if (!emailRegex.test(email.trim())) {
+    if (!validateEmail(email.trim())) {
       setError('Por favor, ingresa un formato de email válido (ej: tu@email.com)')
       setLoading(false); return
     }
@@ -96,7 +95,7 @@ export default function AuthPage() {
     if (!result.success) {
       setError(result.error)
     } else {
-      setSuccess('¡Cuenta creada! Bienvenido/a a la Colmena 🐝 Redirigiendo...')
+      setSuccess('¡Cuenta creada! Bienvenido/a a la Colmena. Redirigiendo...')
       setTimeout(() => navigate('/'), 800)
     }
   }
@@ -110,14 +109,14 @@ export default function AuthPage() {
             className={`auth-tab ${mode === 'login' ? 'active' : ''}`}
             onClick={() => switchMode('login')}
           >
-            <LogIn size={15} style={{ display: 'inline', marginRight: 6 }} />
+            <LogIn size={15} className="auth-tab-icon" />
             Iniciar sesión
           </button>
           <button
             className={`auth-tab ${mode === 'register' ? 'active' : ''}`}
             onClick={() => switchMode('register')}
           >
-            <UserPlus size={15} style={{ display: 'inline', marginRight: 6 }} />
+            <UserPlus size={15} className="auth-tab-icon" />
             Registrarse
           </button>
         </div>
@@ -126,12 +125,12 @@ export default function AuthPage() {
         {mode === 'login' && (
           <form className="auth-form" onSubmit={handleLogin} noValidate>
             <div>
-              <h2 className="auth-title">¡Hola de nuevo! 👋</h2>
+              <h2 className="auth-title">¡Hola de nuevo!</h2>
               <p className="auth-subtitle">Ingresa a tu cuenta para continuar comprando.</p>
             </div>
 
-            {error   && <p className="auth-error">⚠️ {error}</p>}
-            {success && <p className="auth-success">✅ {success}</p>}
+            {error   && <p className="auth-error"><AlertTriangle size={16} /> {error}</p>}
+            {success && <p className="auth-success"><CheckCircle2 size={16} /> {success}</p>}
 
             <div className="input-group">
               <label className="input-label" htmlFor="login-email">Email</label>
@@ -148,24 +147,20 @@ export default function AuthPage() {
 
             <div className="input-group">
               <label className="input-label" htmlFor="login-password">Contraseña</label>
-              <div style={{ position: 'relative' }}>
+              <div className="input-wrap">
                 <input
                   id="login-password"
-                  className="input"
+                  className="input input-with-toggle"                  
                   type={showPass ? 'text' : 'password'}
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   autoComplete="current-password"
-                  style={{ paddingRight: '44px' }}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPass((s) => !s)}
-                  style={{
-                    position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)',
-                    background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)',
-                  }}
+                  className="input-toggle"
                   aria-label={showPass ? 'Ocultar contraseña' : 'Mostrar contraseña'}
                 >
                   {showPass ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -181,12 +176,12 @@ export default function AuthPage() {
               {loading ? 'Ingresando...' : <><LogIn size={18} /> Ingresar</>}
             </button>
 
-            <p style={{ textAlign: 'center', fontSize: '0.88rem', color: 'var(--text-muted)' }}>
+            <p className="auth-switch">
               ¿No tienes cuenta?{' '}
               <button
                 type="button"
                 onClick={() => switchMode('register')}
-                style={{ fontWeight: 700, color: 'var(--text-main)', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}
+                className="auth-switch-btn"
               >
                 Regístrate gratis
               </button>
@@ -198,12 +193,12 @@ export default function AuthPage() {
         {mode === 'register' && (
           <form className="auth-form" onSubmit={handleRegister} noValidate>
             <div>
-              <h2 className="auth-title">¡Únete a la Colmena! 🐝</h2>
+              <h2 className="auth-title">¡Únete a la Colmena!</h2>
               <p className="auth-subtitle">Crea tu cuenta y accede a beneficios exclusivos.</p>
             </div>
 
-            {error   && <p className="auth-error">⚠️ {error}</p>}
-            {success && <p className="auth-success">✅ {success}</p>}
+            {error   && <p className="auth-error"><AlertTriangle size={16} /> {error}</p>}
+            {success && <p className="auth-success"><CheckCircle2 size={16} /> {success}</p>}
 
             <div className="input-group">
               <label className="input-label" htmlFor="reg-name">Nombre completo</label>
@@ -233,24 +228,21 @@ export default function AuthPage() {
 
             <div className="input-group">
               <label className="input-label" htmlFor="reg-password">Contraseña</label>
-              <div style={{ position: 'relative' }}>
+              <div className="input-wrap">
                 <input
                   id="reg-password"
-                  className="input"
+                  className="input input-with-toggle"
                   type={showPass ? 'text' : 'password'}
                   placeholder="Mínimo 6 caracteres"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   autoComplete="new-password"
-                  style={{ paddingRight: '44px' }}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPass((s) => !s)}
-                  style={{
-                    position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)',
-                    background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)',
-                  }}
+                  className="input-toggle"
+                  aria-label={showPass ? 'Ocultar contraseña' : 'Mostrar contraseña'}
                 >
                   {showPass ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
@@ -278,12 +270,12 @@ export default function AuthPage() {
               {loading ? 'Creando cuenta...' : <><UserPlus size={18} /> Crear cuenta</>}
             </button>
 
-            <p style={{ textAlign: 'center', fontSize: '0.88rem', color: 'var(--text-muted)' }}>
+            <p className="auth-switch">
               ¿Ya tienes cuenta?{' '}
               <button
                 type="button"
                 onClick={() => switchMode('login')}
-                style={{ fontWeight: 700, color: 'var(--text-main)', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}
+                className="auth-switch-btn"              
               >
                 Inicia sesión
               </button>

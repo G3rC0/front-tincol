@@ -1,21 +1,10 @@
 /**
  * MOCK DATA — Tienda Colmena
- * Cuando conectes tu backend Node/Express + Oracle, reemplaza este array
- * por una llamada: GET /api/productos  →  const data = await res.json()
- * La estructura de cada objeto debe mantenerse igual para que los componentes
- * no necesiten cambios.
+ * Solo se usa cuando VITE_USE_MOCK no es 'false' (ver services/productService.js).
+ * Las páginas no importan este archivo directamente: pasan por los hooks de
+ * hooks/useProducts.js. Cuando el backend esté listo, este archivo se puede borrar.
+ * Las constantes de la interfaz viven en constants/catalog.js.
  */
-    
-export const CATEGORIES = ['Todos', 'Camisetas', 'Hoodies', 'Pantalones', 'Accesorios']
-
-export const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL']
-
-export const PRICE_RANGES = [
-  { label: 'Hasta Bs. 50',      min: 0,   max: 50 },
-  { label: 'Bs. 50 – 100',      min: 50,  max: 100 },
-  { label: 'Bs. 100 – 200',     min: 100, max: 200 },
-  { label: 'Más de Bs. 200',    min: 200, max: Infinity },
-]
 
 // badge: 'Nuevo' | 'Oferta' | null
 // badgeColor: 'green' | 'coral' | null
@@ -30,6 +19,7 @@ export const products = [
     badge: 'Nuevo',
     badgeColor: 'green',
     featured: true,
+    highlight: 'Algodón premium 380GSM',
     description:
       'Hoodie oversized de algodón premium 380GSM. Capucha doble capa, bolsillo canguro con detalle bordado en el pecho. Fit relajado pensado para el estilo urbano más auténtico. Interior afelpado para esos días fríos en la ciudad.',
     images: [
@@ -47,6 +37,7 @@ export const products = [
     badge: 'Oferta',
     badgeColor: 'coral',
     featured: true,
+    highlight: 'Algodón peinado 200GSM',
     description:
       'Camiseta de algodón peinado 200GSM con gráfico serigrafiado al frente. Cuello redondo reforzado, costuras dobles en mangas y dobladillo. La base perfecta para cualquier look.',
     images: [
@@ -64,6 +55,7 @@ export const products = [
     badge: null,
     badgeColor: null,
     featured: false,
+    highlight: 'French terry gris melange',
     description:
       'Jogger en french terry gris melange. Cintura elástica con cordón ajustable, bolsillos laterales y bolsillo trasero con cierre oculto. Cómodo para la calle o el gym.',
     images: [
@@ -81,6 +73,7 @@ export const products = [
     badge: 'Nuevo',
     badgeColor: 'green',
     featured: true,
+    highlight: 'Cierre trasero ajustable',
     description:
       'Gorra 6 paneles con bordado en relieve del logo Colmena. Cierre trasero ajustable, visera curva pre-curvada. El accesorio que completa cualquier fit.',
     images: [
@@ -98,6 +91,7 @@ export const products = [
     badge: null,
     badgeColor: null,
     featured: true,
+    highlight: 'Corte drop shoulder',
     description:
       'Camiseta oversized en beige clásico. Hombros caídos, corte drop shoulder con dobladillo crudo. La pieza base definitiva — combina con todo y dura toda la temporada.',
     images: [
@@ -115,6 +109,7 @@ export const products = [
     badge: 'Oferta',
     badgeColor: 'coral',
     featured: false,
+    highlight: 'Cierre completo e interior afelpado',
     description:
       'Hoodie con cierre completo en coral vibrante. Interior afelpado cálido, bolsillos laterales con cierre. El statement piece de esta temporada. Atrévete al color.',
     images: [
@@ -132,6 +127,7 @@ export const products = [
     badge: 'Nuevo',
     badgeColor: 'green',
     featured: false,
+    highlight: '6 bolsillos en canvas washed',
     description:
       'Cargo de 6 bolsillos en canvas olive washed. Fit relaxed con cintura ajustable y puños en las piernas. El pantalón más funcional del streetwear — bolsillos de verdad.',
     images: [
@@ -149,6 +145,7 @@ export const products = [
     badge: null,
     badgeColor: null,
     featured: false,
+    highlight: 'Algodón peinado 220GSM',
     description:
       'Camiseta marinera con rayas navy clásicas. Algodón peinado 220GSM, corte regular ligeramente holgado. Un clásico renovado con el toque urbano de Colmena.',
     images: [
@@ -166,6 +163,7 @@ export const products = [
     badge: null,
     badgeColor: null,
     featured: false,
+    highlight: 'Sarga de algodón e interior de malla',
     description:
       'Bucket hat negro en sarga de algodón. Ala de 6cm, interior de malla transpirable. El accesorio más versátil de la temporada — funciona en cualquier estación.',
     images: [
@@ -183,6 +181,7 @@ export const products = [
     badge: 'Nuevo',
     badgeColor: 'green',
     featured: false,
+    highlight: 'Interior afelpado y puños en canalé',
     description:
       'Crewneck en lila suave — el color de temporada. Interior afelpado cálido, puños y cintura en canalé elástico. El sweatshirt más versátil del catálogo Colmena.',
     images: [
@@ -200,6 +199,7 @@ export const products = [
     badge: 'Oferta',
     badgeColor: 'coral',
     featured: false,
+    highlight: 'Estampado camuflaje urbano',
     description:
       'Short cargo en estampado camuflaje urbano. Bolsillos laterales con solapa, largo mid-thigh. Perfecto para el verano en la ciudad o el skatepark.',
     images: [
@@ -217,6 +217,7 @@ export const products = [
     badge: 'Nuevo',
     badgeColor: 'green',
     featured: false,
+    highlight: 'Lona lavada con correa larga',
     description:
       'Tote bag mini en lona lavada color miel. Asas cortas y correa larga incluida, capacidad para el día a día. Serigrafía Colmena en el frente.',
     images: [
@@ -226,10 +227,3 @@ export const products = [
     ],
   },
 ]
-
-/** Devuelve un producto por ID (simula GET /api/productos/:id) */
-export const getProductById = (id) =>
-  products.find((p) => p.id === Number(id)) || null
-
-/** Devuelve productos destacados (simula GET /api/productos?featured=true) */
-export const getFeaturedProducts = () => products.filter((p) => p.featured)

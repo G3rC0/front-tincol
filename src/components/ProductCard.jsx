@@ -1,32 +1,29 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ShoppingCart, Eye, Info } from 'lucide-react'
-import { useAuth } from '../context/AuthContext'
+import { ShoppingCart, Eye, Info, CheckCircle2 } from 'lucide-react'
 import AuthModal from './AuthModal'
 import SizePickerModal from './SizePickerModal'
 import Badge from './ui/Badge'
 import Toast from './ui/Toast'
+import { formatPrice } from '../utils/formatPrice'
+import { useToast } from '../hooks/useToast'
+import { useRequireAuth } from '../hooks/useRequireAuth'
 
 export default function ProductCard({ product, onAddedToCart }) {
-  const { isAuthenticated } = useAuth()
-  const [showAuthModal, setShowAuthModal]     = useState(false)
+  const { requireAuth, showAuthModal, closeAuthModal } = useRequireAuth()
   const [showSizePicker, setShowSizePicker]   = useState(false)
-  const [showToast, setShowToast]             = useState(false)
+  const toast = useToast()
   const [showDescription, setShowDescription] = useState(false)
 
-  const handleAddToCart = () => {
-    if (!isAuthenticated) setShowAuthModal(true)
-    else setShowSizePicker(true)
-  }
+  const handleAddToCart = () => requireAuth(() => setShowSizePicker(true))
 
-    const handleAdded = () => {
-      if (onAddedToCart) {
-        onAddedToCart(product.name)   // catálogo: lo muestra el padre
-        return
-      }
-      setShowToast(true)              // home: lo muestra la propia tarjeta
-      setTimeout(() => setShowToast(false), 2000)
+  const handleAdded = () => {
+    if (onAddedToCart) {
+      onAddedToCart(product.name)   // catálogo: lo muestra el padre
+      return
     }
+    toast.show()                    // home: lo muestra la propia tarjeta
+  }
 
 
   return (
@@ -36,14 +33,14 @@ export default function ProductCard({ product, onAddedToCart }) {
           <img src={product.images[0]} alt={product.name} loading="lazy" />
           {product.badge && (
             <div className="product-card-badge">
-              <Badge color={product.badgeColor}>{product.badge}</Badge>
+              <Badge sticker color={product.badgeColor}>{product.badge}</Badge>
             </div>
           )}
         </div>
 
         <div className="product-card-body">
           <p className="product-card-name">{product.name}</p>
-          <p className="product-card-price">Bs. {product.price.toFixed(2)}</p>
+          <p className="product-card-price">{formatPrice(product.price)}</p>
 
           {/* Solo se muestra si el producto trae su propio "highlight" */}
           {product.highlight && (
@@ -76,8 +73,8 @@ export default function ProductCard({ product, onAddedToCart }) {
         </div>
       </article>
 
-         {showToast && <Toast>✅ Añadido al carrito</Toast>}
-      {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} />}
+      {toast.message && <Toast><CheckCircle2 size={16} /> Añadido al carrito</Toast>}
+      {showAuthModal && <AuthModal onClose={closeAuthModal} />}
       {showSizePicker && (
         <SizePickerModal
           product={product}

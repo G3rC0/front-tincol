@@ -1,5 +1,5 @@
-import { CATEGORIES, SIZES, PRICE_RANGES } from '../data/products'
-import { SlidersHorizontal, X } from 'lucide-react'
+import { CATEGORIES, SIZES, PRICE_RANGES } from '../constants/catalog'
+import { SlidersHorizontal, X, ChevronUp, ChevronDown } from 'lucide-react'
 
 /**
  * FilterSidebar
@@ -35,40 +35,33 @@ export default function FilterSidebar({ filters, onFilterChange, isOpen, onToggl
     <>
       {/* Botón toggle — solo visible en móvil (CSS lo oculta en desktop) */}
       <button className="filter-toggle-btn" onClick={onToggle}>
-        <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <span className="filter-toggle-label">
           <SlidersHorizontal size={18} />
           Filtros
           {hasActiveFilters && (
-            <span className="badge badge-coral" style={{ fontSize: '0.7rem', padding: '2px 8px' }}>
+            <span className="badge badge-coral badge-sm">
               Activos
             </span>
           )}
         </span>
-        <span>{isOpen ? '▲' : '▼'}</span>
+        <span>{isOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}</span>
       </button>
 
       {/* Panel de filtros */}
       <aside className={`filter-sidebar ${isOpen ? 'open' : ''}`}>
         {/* Header del sidebar */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-          <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1rem' }}>
+        <div className="filter-header">
+          <span className="filter-header-title">
             Filtros
           </span>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div className="filter-header-actions">
             {typeof resultCount === 'number' && (
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+              <span className="filter-count">
                 {resultCount} result.
               </span>
             )}
             {hasActiveFilters && (
-              <button
-                onClick={clearAll}
-                style={{
-                  display: 'flex', alignItems: 'center', gap: '4px',
-                  fontFamily: 'var(--font-mono)', fontSize: '0.75rem', fontWeight: 700,
-                  color: 'var(--secondary)', background: 'none', border: 'none', cursor: 'pointer',
-                }}
-              >
+              <button onClick={clearAll} className="filter-clear-link">
                 <X size={13} /> Limpiar
               </button>
             )}

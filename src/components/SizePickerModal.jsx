@@ -3,6 +3,7 @@ import { ShoppingCart } from 'lucide-react'
 import { useCart } from '../context/CartContext'
 import Modal from './ui/Modal'
 import Button from './ui/Button'
+import { formatPrice } from '../utils/formatPrice'
 
 /**
  * SizePickerModal
@@ -23,9 +24,9 @@ export default function SizePickerModal({ product, onClose, onAdded }) {
 
   return (
     <Modal onClose={onClose} eyebrow="Selecciona una talla" title={product.name}>
-      <p className="modal-price">Bs. {product.price.toFixed(2)}</p>
+      <p className="modal-price">{formatPrice(product.price)}</p>
 
-      <div className="size-chips" style={{ marginBottom: '20px' }}>
+        <div className="size-chips size-chips--spaced">
         {product.sizes.map((size) => (
           <button
             key={size}

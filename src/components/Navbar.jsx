@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
-import { ShoppingCart, Menu, X, LogOut, User } from 'lucide-react'
+import { ShoppingCart, Menu, X, LogOut, User, UserPlus, Home, Shirt } from 'lucide-react'
 import { useCart } from '../context/CartContext'
 import { useAuth } from '../context/AuthContext'
 
@@ -54,7 +54,7 @@ export default function Navbar() {
             {isAuthenticated ? (
               <>
                 <span className="nav-user-chip">
-                  👋 {user.name.split(' ')[0]}
+                  <User size={14} /> {user.name.split(' ')[0]}
                 </span>
                 <button onClick={handleLogout} className="btn btn-white btn-sm">
                   <LogOut size={15} /> Salir
@@ -99,20 +99,20 @@ export default function Navbar() {
       {menuOpen && (
         <div className="mobile-menu">
           <Link to="/" className="mobile-link" onClick={close}>
-            🏠 Inicio
+            <Home size={20} /> Inicio
           </Link>
           <Link to="/catalogo" className="mobile-link" onClick={close}>
-            👕 Catálogo
+            <Shirt size={20} /> Catálogo
           </Link>
           <Link to="/carrito" className="mobile-link" onClick={close}>
-            🛒 Carrito {itemCount > 0 && `(${itemCount})`}
+            <ShoppingCart size={20} /> Carrito {itemCount > 0 && `(${itemCount})`}
           </Link>
 
           <hr className="divider divider-tight" />    
           {isAuthenticated ? (
             <>
-              <div className="mobile-link" style={{ background: 'var(--primary)' }}>
-                👋 Hola, {user.name.split(' ')[0]}
+              <div className="mobile-link mobile-link-user">
+                <User size={20} /> Hola, {user.name.split(' ')[0]}
               </div>
               <button
                 onClick={handleLogout}
@@ -135,7 +135,7 @@ export default function Navbar() {
                 className="btn btn-primary btn-full"
                 onClick={close}
               >
-                🐝 Crear cuenta
+                <UserPlus size={16} /> Crear cuenta
               </Link>
             </>
           )}

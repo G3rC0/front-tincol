@@ -11,6 +11,9 @@
 
 import { createContext, useContext, useState } from 'react'
 
+// ⚠️ SOLO PARA DESARROLLO: las contraseñas se guardan en texto plano en localStorage.
+// Antes de producción esto debe moverse al backend (hash con bcrypt/argon2 + JWT).
+// Ver sección "Seguridad" del README.
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {

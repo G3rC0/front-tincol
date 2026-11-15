@@ -1,18 +1,12 @@
 import { Link } from 'react-router-dom'
 import { ArrowRight, Zap } from 'lucide-react'
-import { getFeaturedProducts, CATEGORIES } from '../data/products'
+import { CATEGORIES } from '../constants/catalog'
+import { useFeaturedProducts } from '../hooks/useProducts'
 import ProductCard from '../components/ProductCard'
 
-const CATEGORY_EMOJIS = {
-  Todos:      '🛍️',
-  Camisetas:  '👕',
-  Hoodies:    '🧥',
-  Pantalones: '👖',
-  Accesorios: '🧢',
-}
 
 export default function HomePage() {
-  const featured = getFeaturedProducts()
+  const { data: featured, loading, error, reload } = useFeaturedProducts()
 
   return (
     <div>
@@ -21,7 +15,7 @@ export default function HomePage() {
         <div className="container hero-inner">
           {/* Eyebrow */}
           <span className="hero-eyebrow">
-            <Zap size={13} fill="currentColor" /> Nueva Colección 2025
+            <Zap size={13} fill="currentColor" /> Nueva colección
           </span>
 
           {/* Título principal */}
@@ -32,8 +26,8 @@ export default function HomePage() {
 
           {/* Subtítulo */}
           <p className="hero-subtitle">
-            Streetwear auténtico para la gente que no sigue tendencias — las crea.
-            Ropa con carácter, hecha para durar.
+            Camisetas, hoodies, pantalones y accesorios de corte relajado
+            para el día a día en la ciudad.
           </p>
 
           {/* CTAs */}
@@ -42,7 +36,7 @@ export default function HomePage() {
               Ver catálogo <ArrowRight size={18} />
             </Link>
             <Link to="/catalogo?cat=Hoodies" className="btn btn-primary btn-lg">
-              🧥 Hoodies
+              Hoodies
             </Link>
           </div>
 
@@ -50,7 +44,7 @@ export default function HomePage() {
           <div className="hero-deco">
             <div className="hero-badge-big">
               🐝 Tienda Colmena <br />
-              <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 500, fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+              <span className="hero-badge-sub">                
                 Hecho en Bolivia
               </span>
             </div>
@@ -59,8 +53,8 @@ export default function HomePage() {
       </section>
 
       {/* ── Categorías ─────────────────────────── */}
-      <section className="page-section" style={{ paddingTop: '0' }}>
-        <div className="container">
+      <section className="page-section page-section--flush">        
+          <div className="container">
           <div className="section-header">
             <h2 className="section-title">Categorías</h2>
           </div>
@@ -71,7 +65,6 @@ export default function HomePage() {
                 to={cat === 'Todos' ? '/catalogo' : `/catalogo?cat=${cat}`}
                 className="cat-chip"
               >
-                <span>{CATEGORY_EMOJIS[cat]}</span>
                 {cat}
               </Link>
             ))}
@@ -83,16 +76,25 @@ export default function HomePage() {
       <section className="page-section">
         <div className="container">
           <div className="section-header">
-            <h2 className="section-title">Lo más nuevo 🔥</h2>
+            <h2 className="section-title">Lo más nuevo</h2>
             <Link to="/catalogo" className="btn btn-white btn-sm">
               Ver todo <ArrowRight size={14} />
             </Link>
           </div>
-          <div className="product-grid">
-            {featured.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+          {loading ? (
+            <p className="section-status">Cargando productos...</p>
+          ) : error ? (
+            <p className="section-status">
+              No pudimos cargar los productos.
+              <button className="btn btn-white btn-sm" onClick={reload}>Reintentar</button>
+            </p>
+          ) : (
+            <div className="product-grid">
+              {(featured ?? []).map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -101,13 +103,13 @@ export default function HomePage() {
         <div className="cta-banner">
           <div>
             <h2 className="cta-banner-title">
-              🐝 Únete a la Colmena
+              Únete a la Colmena
             </h2>
             <p className="cta-banner-sub">
-              Crea tu cuenta y accede a descuentos exclusivos para miembros.
+              Crea tu cuenta para armar tu carrito y comprar más rápido.
             </p>
           </div>
-          <Link to="/auth?mode=register" className="btn btn-dark btn-lg" style={{ flexShrink: 0 }}>
+          <Link to="/auth?mode=register" className="btn btn-dark btn-lg cta-banner-btn">
             Registrarse gratis <ArrowRight size={18} />
           </Link>
         </div>

@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { LogIn, UserPlus } from 'lucide-react'
+import { LogIn, UserPlus, Lock } from 'lucide-react'
 import Modal from './ui/Modal'
 import Button from './ui/Button'
 
@@ -19,7 +19,7 @@ export default function AuthModal({ onClose }) {
   return (
     <Modal
       onClose={onClose}
-      icon="🔒"
+      icon={<Lock size={40} strokeWidth={1.75} />}
       title="¡Únete a la Colmena!"
       subtitle="Inicia sesión o crea tu cuenta para añadir productos a tu carrito."
     >
